@@ -1,0 +1,200 @@
+{
+	"name": "df_hospital",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_dim_date_raw",
+						"type": "DatasetReference"
+					},
+					"name": "dimdate"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_lookup",
+						"type": "DatasetReference"
+					},
+					"name": "countrycsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_raw_hospital",
+						"type": "DatasetReference"
+					},
+					"name": "hospitalcsv"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "weekly_hosp",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_daily_hospitalization",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "pivot1"
+				},
+				{
+					"name": "pivot2"
+				},
+				{
+					"name": "sort1"
+				},
+				{
+					"name": "sort2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          date_key as date,",
+				"          date as date,",
+				"          year as short,",
+				"          month as short,",
+				"          day as short,",
+				"          day_name as string,",
+				"          day_of_year as short,",
+				"          week_of_month as short,",
+				"          week_of_year as short,",
+				"          month_name as string,",
+				"          year_month as integer,",
+				"          year_week as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dimdate",
+				"source(output(",
+				"          country as string,",
+				"          country_code_2_digit as string,",
+				"          country_code_3_digit as string,",
+				"          continent as string,",
+				"          population as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> countrycsv",
+				"source(output(",
+				"          country as string,",
+				"          indicator as string,",
+				"          date as date,",
+				"          year_week as string,",
+				"          value as double,",
+				"          source as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> hospitalcsv",
+				"hospitalcsv, aggregate1 join(year_week == year_week_str,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join2 select(mapColumn(",
+				"          country = hospitalcsv@country,",
+				"          indicator,",
+				"          date,",
+				"          value,",
+				"          source,",
+				"          year_week_str,",
+				"          start_week_date,",
+				"          end_week_date,",
+				"          country = countrycsv@country,",
+				"          country_code_2_digit,",
+				"          country_code_3_digit,",
+				"          population",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn1 aggregate(groupBy(year_week_str),",
+				"     start_week_date = min(date),",
+				"          end_week_date = max(date)) ~> aggregate1",
+				"dimdate derive(year_week_str = toString(year) + '-W' + lpad(toString(week_of_year),2, '0')) ~> derivedColumn1",
+				"select1 split(indicator == 'Daily hospital occupancy' || indicator== 'Daily ICU occupancy',",
+				"     disjoint: false) ~> split1@(daily, weekly)",
+				"join1, countrycsv join(hospitalcsv@country == countrycsv@country,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"split1@daily pivot(groupBy(country,",
+				"          country_code_2_digit,",
+				"          country_code_3_digit,",
+				"          population,",
+				"          date,",
+				"          source),",
+				"     pivotBy(indicator, ['Daily hospital occupancy', 'Daily ICU occupancy']),",
+				"     count = sum(value),",
+				"     columnNaming: '$N_$V',",
+				"     lateral: true) ~> pivot1",
+				"split1@weekly pivot(groupBy(country,",
+				"          country_code_2_digit,",
+				"          country_code_3_digit,",
+				"          population,",
+				"          year_week_str,",
+				"          start_week_date,",
+				"          end_week_date,",
+				"          source),",
+				"     pivotBy(indicator, ['Weekly new hospital admissions per 100k', 'Weekly new ICU admissions per 100k']),",
+				"     count = sum(value),",
+				"     columnNaming: '$N_$V',",
+				"     lateral: true) ~> pivot2",
+				"pivot1 sort(desc(date, true),",
+				"     asc(country, true),",
+				"     partitionBy('hash', 1)) ~> sort1",
+				"pivot2 sort(desc(year_week_str, true),",
+				"     asc(country, true),",
+				"     partitionBy('hash', 1)) ~> sort2",
+				"sort2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['weekly_report.csv'],",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1",
+				"sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['daily_report.csv'],",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink2"
+			]
+		}
+	}
+}
