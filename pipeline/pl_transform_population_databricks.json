@@ -1,5 +1,5 @@
 {
-	"name": "pl_databricks",
+	"name": "pl_transform_population_databricks",
 	"properties": {
 		"activities": [
 			{
@@ -23,6 +23,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "transformations"
+		},
 		"annotations": []
 	}
 }

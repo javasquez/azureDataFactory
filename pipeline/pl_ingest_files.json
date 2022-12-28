@@ -134,6 +134,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "ingestion"
+		},
 		"annotations": [],
 		"lastPublishTime": "2022-12-27T11:06:26Z"
 	},

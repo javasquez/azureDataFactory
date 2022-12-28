@@ -1,5 +1,5 @@
 {
-	"name": "ds_daily_hospitalization",
+	"name": "ls_testing_processed",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_datalake_covidreportingdl",
@@ -13,48 +13,51 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "ecdc/daily_hosp",
+				"fileName": "*",
+				"folderPath": "ecdc/testing",
 				"fileSystem": "processed"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
-			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
 		"schema": [
 			{
-				"name": "country",
 				"type": "String"
 			},
 			{
-				"name": "country_code_2_digit",
 				"type": "String"
 			},
 			{
-				"name": "country_code_3_digit",
 				"type": "String"
 			},
 			{
-				"name": "population",
 				"type": "String"
 			},
 			{
-				"name": "date",
 				"type": "String"
 			},
 			{
-				"name": "source",
 				"type": "String"
 			},
 			{
-				"name": "count_Daily hospital occupancy",
 				"type": "String"
 			},
 			{
-				"name": "count_Daily ICU occupancy",
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
 				"type": "String"
 			}
 		]
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

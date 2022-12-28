@@ -1,5 +1,5 @@
 {
-	"name": "pl_hive",
+	"name": "pl_transform_testing_hive",
 	"properties": {
 		"activities": [
 			{
@@ -27,6 +27,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "transformations"
+		},
 		"annotations": [],
 		"lastPublishTime": "2022-12-27T21:53:38Z"
 	},

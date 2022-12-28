@@ -5,6 +5,9 @@
 			"referenceName": "ls_datalake_covidreportingdl",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "raw"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
