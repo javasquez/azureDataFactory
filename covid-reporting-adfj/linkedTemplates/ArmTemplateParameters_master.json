@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "covid-reporting-adfj"
+		},
+		"linkedService1Insight_password": {
+			"value": ""
+		},
+		"ls_ablobl_covidreportingaz_connectionString": {
+			"value": ""
+		},
+		"ls_covid_cluster_accessToken": {
+			"value": ""
+		},
+		"ls_datalake_covidreportingdl_accountKey": {
+			"value": ""
+		},
+		"navision_connectionString": {
+			"value": ""
+		},
+		"linkedService1Insight_properties_typeProperties_userName": {
+			"value": "admin"
+		},
+		"ls_datalake_covidreportingdl_properties_typeProperties_url": {
+			"value": "https://covidreportingdlvasquez.dfs.core.windows.net/"
+		},
+		"ls_http_ecdc_parametrizable_properties_typeProperties_url": {
+			"value": "@{linkedService().sourceBaseURL}"
+		},
+		"ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
+			"value": "https://github.com"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"value": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingaz"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

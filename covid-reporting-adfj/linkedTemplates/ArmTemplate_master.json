@@ -1,0 +1,132 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory",
+			"defaultValue": "covid-reporting-adfj"
+		},
+		"linkedService1Insight_password": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"password\"de \"linkedService1Insight\""
+		},
+		"ls_ablobl_covidreportingaz_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"connectionString\"de \"ls_ablobl_covidreportingaz\""
+		},
+		"ls_covid_cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accessToken\"de \"ls_covid_cluster\""
+		},
+		"ls_datalake_covidreportingdl_accountKey": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accountKey\"de \"ls_datalake_covidreportingdl\""
+		},
+		"navision_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"connectionString\"de \"navision\""
+		},
+		"linkedService1Insight_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin"
+		},
+		"ls_datalake_covidreportingdl_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://covidreportingdlvasquez.dfs.core.windows.net/"
+		},
+		"ls_http_ecdc_parametrizable_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{linkedService().sourceBaseURL}"
+		},
+		"ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://github.com"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingaz"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI de la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas."
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Token de SAS para la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "covid-reporting-adfj_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_ablobl_covidreportingaz_connectionString": {
+						"value": "[parameters('ls_ablobl_covidreportingaz_connectionString')]"
+					},
+					"ls_covid_cluster_accessToken": {
+						"value": "[parameters('ls_covid_cluster_accessToken')]"
+					},
+					"ls_datalake_covidreportingdl_accountKey": {
+						"value": "[parameters('ls_datalake_covidreportingdl_accountKey')]"
+					},
+					"navision_connectionString": {
+						"value": "[parameters('navision_connectionString')]"
+					},
+					"ls_datalake_covidreportingdl_properties_typeProperties_url": {
+						"value": "[parameters('ls_datalake_covidreportingdl_properties_typeProperties_url')]"
+					},
+					"ls_http_ecdc_parametrizable_properties_typeProperties_url": {
+						"value": "[parameters('ls_http_ecdc_parametrizable_properties_typeProperties_url')]"
+					},
+					"ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
+						"value": "[parameters('ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "covid-reporting-adfj_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"linkedService1Insight_password": {
+						"value": "[parameters('linkedService1Insight_password')]"
+					},
+					"linkedService1Insight_properties_typeProperties_userName": {
+						"value": "[parameters('linkedService1Insight_properties_typeProperties_userName')]"
+					},
+					"trigger1_properties_typeProperties_scope": {
+						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'covid-reporting-adfj_ArmTemplate_0')]"
+			]
+		}
+	]
+}
