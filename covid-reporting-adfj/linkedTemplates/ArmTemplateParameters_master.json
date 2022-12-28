@@ -35,8 +35,8 @@
 		"ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 			"value": "https://github.com"
 		},
-		"trigger1_properties_typeProperties_scope": {
-			"value": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingaz"
+		"tr_appear_population_Data_properties_typeProperties_scope": {
+			"value": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingvasquez"
 		},
 		"containerUri": {
 			"value": ""

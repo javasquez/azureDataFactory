@@ -47,9 +47,9 @@
 			"type": "string",
 			"defaultValue": "https://github.com"
 		},
-		"trigger1_properties_typeProperties_scope": {
+		"tr_appear_population_Data_properties_typeProperties_scope": {
 			"type": "string",
-			"defaultValue": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingaz"
+			"defaultValue": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingvasquez"
 		}
 	},
 	"variables": {
@@ -2015,16 +2015,16 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"name": "[concat(parameters('factoryName'), '/tr_appear_population_Data')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "pl_ingest_population_data",
+							"referenceName": "pl_execute_population_pipeline",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -2032,17 +2032,16 @@
 				],
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
-					"blobPathBeginsWith": "/population/blobs/pop",
-					"blobPathEndsWith": ".gz",
+					"blobPathBeginsWith": "/population/blobs/population_by_age.tsv.gz",
 					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('trigger1_properties_typeProperties_scope')]",
+					"scope": "[parameters('tr_appear_population_Data_properties_typeProperties_scope')]",
 					"events": [
 						"Microsoft.Storage.BlobCreated"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pl_ingest_population_data')]"
+				"[concat(variables('factoryId'), '/pipelines/pl_execute_population_pipeline')]"
 			]
 		},
 		{
@@ -2396,17 +2395,60 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/pl_execute_population_pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"activities": [
+					{
+						"name": "execute ingest",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pl_ingest_population_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "transform population",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "execute ingest",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pl_transform_population_databricks",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "execute"
+				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_ingest_population_data')]",
+				"[concat(variables('factoryId'), '/pipelines/pl_transform_population_databricks')]"
+			]
 		}
 	]
 }

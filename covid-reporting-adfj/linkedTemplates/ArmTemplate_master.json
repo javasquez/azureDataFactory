@@ -47,9 +47,9 @@
 			"type": "string",
 			"defaultValue": "https://github.com"
 		},
-		"trigger1_properties_typeProperties_scope": {
+		"tr_appear_population_Data_properties_typeProperties_scope": {
 			"type": "string",
-			"defaultValue": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingaz"
+			"defaultValue": "/subscriptions/b762a8d4-6f2e-4c05-9577-0c7eb4d0ed5f/resourceGroups/covid-reporting-gr/providers/Microsoft.Storage/storageAccounts/covidreportingvasquez"
 		},
 		"containerUri": {
 			"type": "string",
@@ -126,8 +126,8 @@
 					"linkedService1Insight_properties_typeProperties_userName": {
 						"value": "[parameters('linkedService1Insight_properties_typeProperties_userName')]"
 					},
-					"trigger1_properties_typeProperties_scope": {
-						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
+					"tr_appear_population_Data_properties_typeProperties_scope": {
+						"value": "[parameters('tr_appear_population_Data_properties_typeProperties_scope')]"
 					}
 				}
 			},
