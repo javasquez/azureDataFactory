@@ -1,9 +1,9 @@
 {
-	"name": "pipeline2",
+	"name": "pl_transform cases_death",
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "casesdeath",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
