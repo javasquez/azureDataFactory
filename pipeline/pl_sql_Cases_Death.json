@@ -1,5 +1,5 @@
 {
-	"name": "pl_sql_azure",
+	"name": "pl_sql_Cases_Death",
 	"properties": {
 		"activities": [
 			{
@@ -20,6 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -28,8 +29,10 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "TRUNCATE TABLE covid_reporting.cases_and_deaths;",
 						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -55,6 +58,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "sqlize"
+		},
 		"annotations": []
 	}
 }
