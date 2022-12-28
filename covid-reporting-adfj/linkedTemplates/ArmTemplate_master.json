@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"accountKey\"de \"ls_datalake_covidreportingdl\""
 		},
+		"ls_sql_covidreporting_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"connectionString\"de \"ls_sql_covidreporting\""
+		},
 		"navision_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"navision\""
@@ -82,6 +86,9 @@
 					},
 					"ls_datalake_covidreportingdl_accountKey": {
 						"value": "[parameters('ls_datalake_covidreportingdl_accountKey')]"
+					},
+					"ls_sql_covidreporting_connectionString": {
+						"value": "[parameters('ls_sql_covidreporting_connectionString')]"
 					},
 					"navision_connectionString": {
 						"value": "[parameters('navision_connectionString')]"

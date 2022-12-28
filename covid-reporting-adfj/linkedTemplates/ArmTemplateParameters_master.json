@@ -17,6 +17,9 @@
 		"ls_datalake_covidreportingdl_accountKey": {
 			"value": ""
 		},
+		"ls_sql_covidreporting_connectionString": {
+			"value": ""
+		},
 		"navision_connectionString": {
 			"value": ""
 		},
